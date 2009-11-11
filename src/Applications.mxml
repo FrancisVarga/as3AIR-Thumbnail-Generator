@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:WindowedApplication xmlns:fx="http://ns.adobe.com/mxml/2009" 
+					   xmlns:s="library://ns.adobe.com/flex/spark" 
+					   xmlns:mx="library://ns.adobe.com/flex/halo"
+					   title="Vamels Thumbnail Generator"
+					   frameRate="100"
+					   width="1024" height="768"
+					   creationComplete="windowedapplication1_creationCompleteHandler(event)">
+	<fx:Script>
+		<![CDATA[
+			import cc.vamel.utils.GarbageCollectorHelper;
+			import cc.vamel.utils.ThumbnailGenerator;
+			
+			import flash.display.Loader;
+			import flash.events.Event;
+			import flash.events.FocusEvent;
+			import flash.net.URLRequest;
+			
+			import mx.controls.Image;
+			import mx.events.FlexEvent;
+			import mx.managers.DragManager;
+			
+			private var processing : Boolean = false;
+			private var picList : Array = new Array();
+			private var picItemCounter : uint;
+			
+			[Bindable]
+			private var sumOfPictures : uint;
+			
+			private var folderFile : File;
+			
+			private function handleDroppedFile(event : * = null):void {
+				trace("Handling Dropped File = " + picItemCounter + ' || ' + picList.length);
+				
+				processing=true;
+				
+				sumOfPictures++;
+				picItemCounter++;
+				
+				if(picList.length > 0) {
+					
+					var currentFile : File = picList.shift() as File;
+					var fileLoader : Loader = new Loader();
+					fileLoader.contentLoaderInfo.addEventListener(Event.COMPLETE, fileLoaded);
+					fileLoader.load(new URLRequest(currentFile.url));
+					
+					var image : Image = new Image();
+					image.scaleContent = true;
+					image.source = currentFile.url
+					origPool.addElement(image);
+					
+				}
+				else{
+					
+					processing=false;
+					stage.frameRate = ApplicationVars.CPU_NORMAL;
+				
+				}
+			}
+			
+			private function fileLoaded(event : Event):void{
+				new ThumbnailGenerator(event.currentTarget, ApplicationVars.DEFAULT_THUMB_WIDTH, ApplicationVars.DEFAULT_THUMB_HEIGHT, handleDroppedFile, ApplicationVars.folderToSave);
+			}
+			
+			protected function windowedapplication1_creationCompleteHandler(event:FlexEvent):void
+			{
+				trace('++++++++++++++++++++++++++++++++++++++++++++++++++++++++++');
+				trace('Thumbnail Generator Applications V 1.0');
+				trace('++++++++++++++++++++++++++++++++++++++++++++++++++++++++++');
+				
+				var folderForThumbnails : File = File.desktopDirectory.resolvePath("Vamel Thumbnail Generator/Created Thumbnails");
+				
+				if(folderForThumbnails.isDirectory == false){
+					folderForThumbnails.createDirectory();
+				}
+				
+				GarbageCollectorHelper.automatedClearGBC(5000);
+			}
+			
+			protected function textinput2_focusOutHandler(event:FocusEvent):void
+			{
+				// TODO Auto-generated method stub
+				ApplicationVars.DEFAULT_THUMB_WIDTH = event.target.text;
+			}
+
+
+			protected function textinput3_focusOutHandler(event:FocusEvent):void
+			{
+				// TODO Auto-generated method stub
+				ApplicationVars.DEFAULT_THUMB_HEIGHT = event.target.text;
+			}
+			
+			public function addMessageOutput($message : String):void{
+				
+			}
+
+		]]>
+	</fx:Script>
+	
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	
+	<s:HGroup bottom="0" top="0" right="0" left="0" autoLayout="true" showInAutomationHierarchy="true">
+		<mx:VDividedBox width="100%" height="100%">
+			<s:Group id="origPool" width="100%" height="100%">
+				<s:layout><s:TileLayout columnWidth="100" rowHeight="100" horizontalGap="10" verticalGap="10"/></s:layout>
+			</s:Group>
+			<s:Group width="100%" height="100%">
+				<s:TextArea id="messages" editable="false" width="100%" height="100%" />
+			</s:Group>
+		</mx:VDividedBox>
+		
+		<mx:Accordion width="270" height="100%">
+			<s:NavigatorContent label="Settings" width="100%" height="100%" id="settings">
+				<s:layout>
+					<s:BasicLayout/>
+				</s:layout>
+				<mx:Form y="12" height="240" dropShadowVisible="true" left="3" right="10">
+					<mx:FormHeading label="Thumbnail Size"/>
+					<mx:FormItem label="Width" required="true">
+						<s:TextInput focusOut="textinput2_focusOutHandler(event)"/>
+					</mx:FormItem>
+					<mx:FormItem label="Height" required="true">
+						<s:TextInput focusOut="textinput3_focusOutHandler(event)"/>
+					</mx:FormItem>
+					<mx:FormItem label="Compression">
+						<s:TextInput text="90"/>
+					</mx:FormItem>
+				</mx:Form>
+			</s:NavigatorContent>
+		</mx:Accordion>
+	</s:HGroup>
+	
+	<s:nativeDragEnter>
+		// Event handler for when something is dragged over to the WindowedApplication
+		
+		// Only allow files to be dragged in
+		if (event.clipboard.hasFormat(ClipboardFormats.FILE_LIST_FORMAT))
+		{
+		var files:Array = event.clipboard.getData(ClipboardFormats.FILE_LIST_FORMAT) as Array;
+		DragManager.acceptDragDrop(event.currentTarget as WindowedApplication);	
+		}
+	</s:nativeDragEnter>
+	
+	<s:nativeDragExit>
+		// Event handler for when the drag leaves the WindowedApplication
+		setStyle("backgroundColor", 0xffffff);
+	</s:nativeDragExit>
+	
+	<s:nativeDragDrop>
+		// Event handler for when a dragged item is dropped on the WindowedApplication
+		for each ( var file in event.clipboard.getData(ClipboardFormats.FILE_LIST_FORMAT) as Array) {
+			picList.push(file);
+		}
+		
+		if(processing == false){
+			handleDroppedFile();
+		}
+		
+	</s:nativeDragDrop>
+</s:WindowedApplication>
