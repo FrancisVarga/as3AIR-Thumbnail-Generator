@@ -49,7 +49,7 @@ package cc.vamel.utils
 		public var saveToFolder : File = null;
 		
 		//the callback function need a object as parameters
-		public function ThumbnailGenerator(loader : Object, width:int, height:int, $callBackFunction : Function = null, saveToFolder : File = null)
+		public function ThumbnailGenerator(loader : Object, width:int, height:int, $callBackFunction : Function = null)
 		{			
 			
 			this.saveToFolder = saveToFolder;
@@ -110,9 +110,9 @@ package cc.vamel.utils
 			stream.open( outputFile, FileMode.WRITE );
 			stream.writeBytes( compressedByteArray, 0, 0 );
 			
-			stream.close();		
-			
+			stream.close();				
 			creationComplete();
+			
 		}
 		
 		
@@ -120,33 +120,32 @@ package cc.vamel.utils
 			createdFilesIndex++;
 			if(callBackFunction){
 				callBackFunction(outputFile);
-				clearAllObjects();
 			}
 			else{
-				trace('`Files created but no callback function was created');	
-				clearAllObjects();
+				trace('Files created but no callback function was created');	
 			}
+			
+			clearAllObjects();
 			
 		}
 		
-		//this function clear all objects and invoke the garbage collector of flash
-		private function clearAllObjects():void{
-			
+		//this function clear all objects and invoke the garbage collector
+		private function clearAllObjects():void{		
 			outputFile = null;
-			 byteArrayFromOriginalFile = null;
-			 jpegEncoder = null;
-			 _loader = null;
-			 bmp = null;
-			 bmpd =null;
-			 encoder = null;
-			 img = null;
-			 matrix = null;
-			 ratio = null;
-			 outputHeight = null;
-			 outputWidth = null;
-			 outputByteArray = null;
+			byteArrayFromOriginalFile = null;
+			jpegEncoder = null;
+			_loader = null;
+			bmp = null;
+			bmpd =null;
+			encoder = null;
+			img = null;
+			matrix = null;
+			ratio = null;
+			outputHeight = null;
+			outputWidth = null;
+			outputByteArray = null;
 			 
-			 System.gc();
+			System.gc();
 		}
 		
 	}

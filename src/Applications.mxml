@@ -59,7 +59,7 @@
 			}
 			
 			private function fileLoaded(event : Event):void{
-				new ThumbnailGenerator(event.currentTarget, ApplicationVars.DEFAULT_THUMB_WIDTH, ApplicationVars.DEFAULT_THUMB_HEIGHT, handleDroppedFile, ApplicationVars.folderToSave);
+				new ThumbnailGenerator(event.currentTarget, ApplicationVars.DEFAULT_THUMB_WIDTH, ApplicationVars.DEFAULT_THUMB_HEIGHT, handleDroppedFile);
 			}
 			
 			protected function windowedapplication1_creationCompleteHandler(event:FlexEvent):void
@@ -133,13 +133,10 @@
 	</s:HGroup>
 	
 	<s:nativeDragEnter>
-		// Event handler for when something is dragged over to the WindowedApplication
-		
-		// Only allow files to be dragged in
 		if (event.clipboard.hasFormat(ClipboardFormats.FILE_LIST_FORMAT))
 		{
-		var files:Array = event.clipboard.getData(ClipboardFormats.FILE_LIST_FORMAT) as Array;
-		DragManager.acceptDragDrop(event.currentTarget as WindowedApplication);	
+			var files:Array = event.clipboard.getData(ClipboardFormats.FILE_LIST_FORMAT) as Array;
+			DragManager.acceptDragDrop(event.currentTarget as WindowedApplication);	
 		}
 	</s:nativeDragEnter>
 	
