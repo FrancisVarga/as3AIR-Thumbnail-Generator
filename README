@@ -1,0 +1,25 @@
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++ AIR THUMBNAIL GENERATOR +++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+This Application is a Thumbnail Generator they will be save the Thumbnail on:
+	
+Windows: Desktop\Vamel Thumbnail Generator\Created Thumbnail
+Mac: Desktop\Vamel Thumbnail Generator\Created Thumbnail
+Linux: Desktop\Vamel Thumbnail Generator\Created Thumbnail
+
+This app included the C Lib jpeg_encoder for alchemy... This App will only show
+how to encode a JPEG and PNG File in Flash...
+
+=====================================================================
+ATTENTION
+=====================================================================
+U can only 1 instance of the C Lib don't use instances of the JPEGEncoder,
+i hava write a singleton wrapper (AlchemyJPEG.as [AlchemyJPEG.instance().encoder]).
+
+use it for the encoding a JPEG file... The annother class Thumbnail Generator
+is the class that create the thumbnails...
+
+Have fun with this stuff...
+
+Big thanks for http://github.com/lennart check his account 
