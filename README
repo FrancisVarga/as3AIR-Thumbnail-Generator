@@ -20,6 +20,10 @@ i hava write a singleton wrapper (AlchemyJPEG.as [AlchemyJPEG.instance().encoder
 use it for the encoding a JPEG file... The annother class Thumbnail Generator
 is the class that create the thumbnails...
 
+=====================================================================
+ATTENTION
+=====================================================================
+
 Have fun with this stuff...
 
 Big thanks for http://github.com/lennart check his account 
